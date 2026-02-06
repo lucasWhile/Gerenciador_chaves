@@ -5,6 +5,10 @@ $salaModel = new sala(  null,null);
 $id_sala = $_GET['id'];
 $sala = $salaModel->buscarSala($id_sala);
 
+include_once '../../model/bloco.php';
+$blocoModel = new Bloco(null);
+$blocos = $blocoModel->listarBlocos();
+
 
 ?>
 <!DOCTYPE html>
@@ -50,12 +54,26 @@ $sala = $salaModel->buscarSala($id_sala);
                                 <input type="text" id="nome_sala" name="nome_sala" class="form-control" placeholder="Digite o nome da sala" value="<?= $sala['nome_sala'] ?>" required>
                             </div>
 
+
+                            <div class="mb-3">
+                                <label for="bloco" class="form-label fw-semibold">
+                                    Bloco
+                                </label>
+                                <select id="bloco" name="id_bloco" class="form-select" required>
+                                    <option value="">Selecione um bloco</option>
+                                    <?php foreach ($blocos as $bloco): ?>
+                                        <option value="<?= $bloco['id_bloco'] ?>" <?= $bloco['id_bloco'] == $sala['id_bloco'] ? 'selected' : '' ?>>
+                                            <?= $bloco['nome_bloco'] ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+
                             <div class="d-grid gap-2">
                                 <button type="submit" class="btn btn-success">
                                     Salvar
                                 </button>
 
-                                <a href="../" class="btn btn-outline-secondary">
+                                <a href="cadastrar_sala.php" class="btn btn-outline-secondary">
                                     Voltar
                                 </a>
                             </div>

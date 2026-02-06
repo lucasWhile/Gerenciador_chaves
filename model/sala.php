@@ -101,6 +101,20 @@ class Sala
         return $sala;
         
     }
+
+
+    public function desativar_sala($id_sala)
+    {
+        $conexao = new conexao();
+        $mysqli = $conexao->conectar();
+        $stmt = $mysqli->prepare("UPDATE sala SET status = 'desativado' WHERE id_sala = ?");
+        $stmt->bind_param("i", $id_sala);
+        if ($stmt->execute()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
     
        
 }
