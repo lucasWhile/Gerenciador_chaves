@@ -2,8 +2,8 @@
 session_start();
 include '../../model/bloco.php';
 
-$nome_bloco = $_GET['nome_bloco'];
-$id_bloco = $_GET['id_bloco'];
+$nome_bloco = $_POST['nome_bloco'];
+$id_bloco = $_POST['id_bloco'];
 
 $bloco = new Bloco($nome_bloco);
 

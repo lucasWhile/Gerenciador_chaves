@@ -1,5 +1,5 @@
 <?php
-include '../../conexaobanco/conexao.php';
+include_once '../../conexaobanco/conexao.php';
 class Bloco
 {
     private $nome_bloco;
@@ -83,4 +83,8 @@ class Bloco
 
         return $bloco;
     }
+
+
+        
+    
 }

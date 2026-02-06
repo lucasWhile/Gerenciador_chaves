@@ -1,6 +1,6 @@
 <?php
 
-include '../../conexaobanco/conexao.php';
+include_once '../../conexaobanco/conexao.php';
 
 class Usuario
 {
