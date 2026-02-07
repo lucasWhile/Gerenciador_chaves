@@ -90,6 +90,7 @@
                                 <option value="gerente">Gerente</option>
                                 <option value="coordenador">Coordenação</option>
                                 <option value="instrutor">Instrutor</option>
+                                 <option value="portaria">Portaria</option>
                             </select>
                         </div>
 

@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['nivel_acesso'] = $dados['nivel_acesso'];
             $_SESSION['cpf'] = $dados['cpf_usuario'];
 
-            echo "logado com sucesso";
+            header("Location: ../../view/emprestimo_chave/tela_inicial.php");
         } else {
             $_SESSION['msg'] = 'CPF ou senha inválidos!';
             header("Location: ../../view/usuario/login_usuario.php");

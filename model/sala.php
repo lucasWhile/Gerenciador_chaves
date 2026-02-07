@@ -115,6 +115,27 @@ class Sala
             return false;
         }
     }
+
+
+    public function listar_sala_bloco() {
+        $conexao = new conexao();
+        $mysqli = $conexao->conectar();
+
+        $result = $mysqli->query("SELECT 
+        s.id_sala,
+        s.nome_sala,
+        b.id_bloco,
+        b.nome_bloco
+        FROM sala s
+        JOIN bloco_predial b ON b.id_bloco = s.id_bloco
+        ORDER BY b.nome_bloco, s.nome_sala;
+        ");
+
+        return $result;
+        
+    }
+
+    
     
        
 }

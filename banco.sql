@@ -43,18 +43,10 @@ CREATE TABLE emprestimo_chave (
     hora_devolucao TIME,
     periodo VARCHAR(50) NOT NULL,
     status_emprestimo VARCHAR(50) NOT NULL,
+    evento VARCHAR(255),
     id_usuario INT,
-    FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario)
-);
-
--- =========================
--- TABELA DE LIGAÇÃO
--- EMPRÉSTIMO x SALA
--- =========================
-CREATE TABLE emprestimo_chave_sala (
-    id_emprestimo_sala INT PRIMARY KEY AUTO_INCREMENT,
-    id_emprestimo INT,
     id_sala INT,
-    FOREIGN KEY (id_emprestimo) REFERENCES emprestimo_chave(id_emprestimo),
+    FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario),
     FOREIGN KEY (id_sala) REFERENCES sala(id_sala)
 );
+
