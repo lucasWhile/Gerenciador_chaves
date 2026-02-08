@@ -152,4 +152,22 @@ class Usuario
         $stmt->close();
         $pdo->close();
     }
+
+
+    public function getnome($id_usuario)  {
+        $conexao = new conexao();
+        $pdo = $conexao->conectar();
+
+        $stmt = $pdo->prepare("SELECT nome_usuario FROM usuario WHERE id_usuario = ?");
+        $stmt->bind_param("i", $id_usuario);
+
+        if ($stmt->execute()) {
+            return $stmt->get_result()->fetch_assoc()['nome_usuario'];
+        } else {
+            return false;
+        }
+
+        $stmt->close();
+        $pdo->close();
+    }
 }
