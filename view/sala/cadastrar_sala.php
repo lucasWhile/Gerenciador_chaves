@@ -72,7 +72,7 @@ $salas = $salaModel->listarSalas();
                                     Cadastrar
                                 </button>
 
-                                <a href="../" class="btn btn-outline-secondary">
+                                 <a href="../emprestimo_chave/tela_inicial.php" class="btn btn-outline-secondary">
                                     Voltar
                                 </a>
                             </div>

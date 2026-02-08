@@ -18,7 +18,7 @@ class Sala
         $conexao = new conexao();
         $mysqli = $conexao->conectar();
 
-        $stmt = $mysqli->prepare("INSERT INTO sala (nome_sala, id_bloco) VALUES (?, ?)");
+        $stmt = $mysqli->prepare("INSERT INTO sala (nome_sala, id_bloco, status_sala) VALUES (?, ?, 'ativo')");
         $stmt->bind_param("si", $this->nome_sala, $this->id_bloco);
 
         if ($stmt->execute()) {
@@ -37,7 +37,7 @@ class Sala
         $conexao = new conexao();
         $mysqli = $conexao->conectar();
 
-        $result = $mysqli->query("SELECT * FROM sala s JOIN bloco_predial b ON s.id_bloco = b.id_bloco");
+        $result = $mysqli->query("SELECT * FROM sala s JOIN bloco_predial b ON s.id_bloco = b.id_bloco where s.status_sala = 'ativo' ORDER BY b.nome_bloco, s.nome_sala");
 
         $salas = [];
         while ($row = $result->fetch_assoc()) {
@@ -122,13 +122,16 @@ class Sala
         $mysqli = $conexao->conectar();
 
         $result = $mysqli->query("SELECT 
-        s.id_sala,
-        s.nome_sala,
-        b.id_bloco,
-        b.nome_bloco
-        FROM sala s
-        JOIN bloco_predial b ON b.id_bloco = s.id_bloco
-        ORDER BY b.nome_bloco, s.nome_sala;
+    s.id_sala,
+    s.nome_sala,
+    b.id_bloco,
+    b.nome_bloco
+    FROM sala s
+    JOIN bloco_predial b ON b.id_bloco = s.id_bloco 
+    WHERE s.status_sala = 'ativo'
+    AND b.status = 'ativo'
+    ORDER BY b.nome_bloco, s.nome_sala;
+
         ");
 
         return $result;

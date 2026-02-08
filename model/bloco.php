@@ -15,7 +15,7 @@ class Bloco
         $conexao = new conexao();
         $pdo = $conexao->conectar();
 
-        $stmt = $pdo->prepare("INSERT INTO bloco_predial (nome_bloco) VALUES (?)");
+        $stmt = $pdo->prepare("INSERT INTO bloco_predial (nome_bloco, status) VALUES (?, 'ativo')");
         $stmt->bind_param("s", $this->nome_bloco);
 
         if ($stmt->execute()) {
@@ -33,7 +33,7 @@ class Bloco
         $conexao = new conexao();
         $pdo = $conexao->conectar();
 
-        $stmt = $pdo->prepare("SELECT * FROM bloco_predial");
+        $stmt = $pdo->prepare("SELECT * FROM bloco_predial WHERE status = 'ativo' ORDER BY nome_bloco");
         $stmt->execute();
         $result = $stmt->get_result();
 
@@ -71,7 +71,7 @@ class Bloco
         $conexao = new conexao();
         $pdo = $conexao->conectar();
 
-        $stmt = $pdo->prepare("SELECT * FROM bloco_predial WHERE id_bloco = ?");
+        $stmt = $pdo->prepare("SELECT * FROM bloco_predial WHERE id_bloco = ? AND status = 'ativo'");
         $stmt->bind_param("i", $id_bloco);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -82,6 +82,28 @@ class Bloco
         $pdo->close();
 
         return $bloco;
+    }
+
+    public function desativarBloco($id_bloco)
+    {
+        $conexao = new conexao();
+        $pdo = $conexao->conectar();
+
+        $stmt = $pdo->prepare("UPDATE bloco_predial SET status = 'inativo' WHERE id_bloco = ?");
+        $stmt->bind_param("i", $id_bloco);
+        $stmt->execute();
+        $stmt = $pdo->prepare("UPDATE sala SET status_sala = 'inativo' WHERE id_bloco = ?");
+        $stmt->bind_param("i", $id_bloco);
+
+
+        if ($stmt->execute()) {
+            return true;
+        } else {
+            return false;
+        }
+
+        $stmt->close();
+        $pdo->close();
     }
 
 

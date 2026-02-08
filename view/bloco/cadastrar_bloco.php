@@ -56,7 +56,7 @@ $blocos = $blocoModel->listarBlocos();
                                     Cadastrar
                                 </button>
 
-                                <a href="../" class="btn btn-outline-secondary">
+                                <a href="../emprestimo_chave/tela_inicial.php" class="btn btn-outline-secondary">
                                     Voltar
                                 </a>
                             </div>
@@ -97,8 +97,8 @@ $blocos = $blocoModel->listarBlocos();
                                                 </a>
                                             </td>
                                             <td>
-                                                <a href="excluir_bloco.php?id=<?= $bloco['id_bloco'] ?>" class="btn btn-danger">
-                                                    Excluir
+                                                <a href="../../controller/bloco/desativar_bloco.php?id=<?= $bloco['id_bloco'] ?>" class="btn btn-danger">
+                                                    desativar
                                                 </a>
                                             </td>
                                         </tr>

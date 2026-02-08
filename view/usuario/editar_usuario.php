@@ -1,12 +1,17 @@
 <?php 
 session_start();
+include_once '../../model/usuario.php';
+
+$usuarioModel = new Usuario(null, null, null, null, null, null);
+$usuarios = $usuarioModel->BuscarUsuario($_GET['id']);
+
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro de Usuário</title>
+    <title>Editar Usuário</title>
 
     <!-- Bootstrap 5.3.8 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -27,7 +32,7 @@ session_start();
                 <div class="card-header bg-success text-white text-center rounded-top-4">
                     <h4 class="mb-0">
                         <i class="bi bi-person-plus-fill me-2"></i>
-                        Cadastro de Usuário
+                        Edição de Usuário
                     </h4>
                 </div>
 
@@ -40,7 +45,7 @@ session_start();
                     <?php endif; ?>
                 <?php unset($_SESSION['msg']); ?>
 
-                    <form action="../../controller/usuario/cadastrar_usuario.php" method="post">
+                    <form action="../../controller/usuario/editar_usuario.php" method="post">
 
                         <div class="mb-3">
                             <label for="nome" class="form-label">Nome</label>
@@ -48,7 +53,7 @@ session_start();
                                 <span class="input-group-text">
                                     <i class="bi bi-person"></i>
                                 </span>
-                                <input type="text" id="nome" name="nome" class="form-control" required>
+                                <input type="text" id="nome" name="nome" class="form-control" value="<?= $usuarios['nome_usuario'] ?>" required>
                             </div>
                         </div>
 
@@ -58,7 +63,7 @@ session_start();
                                 <span class="input-group-text">
                                     <i class="bi bi-envelope"></i>
                                 </span>
-                                <input type="email" id="email" name="email" class="form-control" required>
+                                <input type="email" id="email" name="email" class="form-control" value="<?= $usuarios['email_usuario'] ?>" required>
                             </div>
                         </div>
 
@@ -68,7 +73,7 @@ session_start();
                                 <span class="input-group-text">
                                     <i class="bi bi-lock"></i>
                                 </span>
-                                <input type="password" id="senha" name="senha" class="form-control" required>
+                                <input type="password" id="senha" name="senha" class="form-control" value="<?= $usuarios['senha_usuario'] ?>" required>
                             </div>
                         </div>
 
@@ -78,7 +83,7 @@ session_start();
                                 <span class="input-group-text">
                                     <i class="bi bi-telephone"></i>
                                 </span>
-                                <input type="text" id="cpf" name="cpf" class="form-control">
+                                <input type="text" id="cpf" name="cpf" class="form-control" value="<?= $usuarios['cpf_usuario'] ?>">
                             </div>
                         </div>
 
@@ -88,7 +93,7 @@ session_start();
                                 <span class="input-group-text">
                                     <i class="bi bi-telephone"></i>
                                 </span>
-                                <input type="tel" id="telefone" name="telefone" class="form-control">
+                                <input type="tel" id="telefone" name="telefone" class="form-control" value="<?= $usuarios['telefone_usuario'] ?>">
                             </div>
                         </div>
 
@@ -96,26 +101,30 @@ session_start();
                             <label for="nivel_acesso" class="form-label">Nível de Acesso</label>
                             <select id="nivel_acesso" name="nivel_acesso" class="form-select" required>
                                 <option value="">Selecione</option>
-                                <option value="admin">Admin</option>
-                                <option value="gerente">Gerente</option>
-                                <option value="coordenador">Coordenação</option>
-                                <option value="instrutor">Instrutor</option>
-                                 <option value="portaria">Portaria</option>
+                                <option value="admin" <?= ($usuarios['nivel_acesso'] == 'admin') ? 'selected' : '' ?>>Admin</option>
+                                <option value="gerente" <?= ($usuarios['nivel_acesso'] == 'gerente') ? 'selected' : '' ?>>Gerente</option>
+                                <option value="coordenador" <?= ($usuarios['nivel_acesso'] == 'coordenador') ? 'selected' : '' ?>>Coordenação</option>
+                                <option value="instrutor" <?= ($usuarios['nivel_acesso'] == 'instrutor') ? 'selected' : '' ?>>Instrutor</option>
+                                 <option value="portaria" <?= ($usuarios['nivel_acesso'] == 'portaria') ? 'selected' : '' ?>>Portaria</option>
                             </select>
                         </div>
+                           <input type="hidden" name="id_usuario" value="<?= $usuarios['id_usuario'] ?>">
 
                         <!-- Botões -->
                         <div class="d-flex gap-2">
                             <button type="submit" class="btn btn-success w-100">
                                 <i class="bi bi-check-circle me-1"></i>
-                                Cadastrar
+                                Editar
                             </button>
 
-                            <a href="../emprestimo_chave/tela_inicial.php" class="btn btn-outline-secondary w-100">
+                            <a href="../usuario/listar_usuarios.php" class="btn btn-outline-secondary w-100">
                                 <i class="bi bi-arrow-left me-1"></i>
                                 Voltar
                             </a>
                         </div>
+
+                        hidden input to pass the user ID for editing
+                     
 
                     </form>
 

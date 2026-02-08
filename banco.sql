@@ -12,6 +12,7 @@ CREATE TABLE usuario (
     telefone_usuario VARCHAR(50),
     cpf_usuario VARCHAR(50),
     nivel_acesso VARCHAR(50) NOT NULL
+    status_usuario VARCHAR(50) NOT NULL
 );
 
 -- =========================
@@ -19,7 +20,8 @@ CREATE TABLE usuario (
 -- =========================
 CREATE TABLE bloco_predial (
     id_bloco INT PRIMARY KEY AUTO_INCREMENT,
-    nome_bloco VARCHAR(100) NOT NULL
+    nome_bloco VARCHAR(100) NOT NULL,
+    status VARCHAR(50) NOT NULL,
 );
 
 -- =========================

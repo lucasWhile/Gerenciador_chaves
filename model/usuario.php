@@ -27,7 +27,7 @@ class Usuario
         $conexao = new conexao();
         $pdo = $conexao->conectar();
 
-        $stmt = $pdo->prepare("INSERT INTO usuario (nome_usuario, email_usuario, telefone_usuario, nivel_acesso, senha_usuario, cpf_usuario) VALUES (?, ?, ?, ?, ?, ?)");
+        $stmt = $pdo->prepare("INSERT INTO usuario (nome_usuario, email_usuario, telefone_usuario, nivel_acesso, senha_usuario, cpf_usuario, status_usuario) VALUES (?, ?, ?, ?, ?, ?, 1)");
         $stmt->bind_param("ssssss", $this->nome, $this->email, $this->telefone, $this->nivel_acesso, $this->senha, $this->cpf);
 
         if ($stmt->execute()) {
@@ -45,7 +45,7 @@ class Usuario
         $conexao = new conexao();
         $mysqli = $conexao->conectar();
 
-        $sql = "SELECT * FROM usuario WHERE cpf_usuario = ? AND senha_usuario = ?";
+        $sql = "SELECT * FROM usuario WHERE cpf_usuario = ? AND senha_usuario = ? AND status_usuario = 1";
         $stmt = $mysqli->prepare($sql);
 
         $stmt->bind_param("ss", $cpf, $senha);
@@ -86,10 +86,65 @@ class Usuario
         $conexao = new conexao();
         $pdo = $conexao->conectar();
 
-        $stmt = $pdo->prepare("SELECT * FROM usuario");
+        $stmt = $pdo->prepare("SELECT * FROM usuario WHERE status_usuario = 1");
 
         if ($stmt->execute()) {
             return $stmt->get_result();
+        } else {
+            return false;
+        }
+
+        $stmt->close();
+        $pdo->close();
+    }
+
+
+    public function BuscarUsuario($id_usuario)
+    {
+        $conexao = new conexao();
+        $pdo = $conexao->conectar();
+
+        $stmt = $pdo->prepare("SELECT * FROM usuario WHERE   id_usuario = ?");
+        $stmt->bind_param("i", $id_usuario);
+
+        if ($stmt->execute()) {
+            return $stmt->get_result()->fetch_assoc();
+        } else {
+            return false;
+        }
+
+        $stmt->close();
+        $pdo->close();
+    }
+
+     public function desativarUsuario($id_usuario)
+    {
+        $conexao = new conexao();
+        $pdo = $conexao->conectar();
+
+        $stmt = $pdo->prepare("UPDATE usuario SET status_usuario = 0 WHERE id_usuario = ?");
+        $stmt->bind_param("i", $id_usuario);
+
+        if ($stmt->execute()) {
+            return true;
+        } else {
+            return false;
+        }
+
+        $stmt->close();
+        $pdo->close();
+    }
+
+    public function editarUsuario($id_usuario)
+    {
+        $conexao = new conexao();
+        $pdo = $conexao->conectar();
+
+        $stmt = $pdo->prepare("UPDATE usuario SET nome_usuario = ?, email_usuario = ?, telefone_usuario = ?, nivel_acesso = ?, senha_usuario = ?, cpf_usuario = ? WHERE id_usuario = ?");
+        $stmt->bind_param("ssssssi", $this->nome, $this->email, $this->telefone, $this->nivel_acesso, $this->senha, $this->cpf, $id_usuario);
+
+        if ($stmt->execute()) {
+            return true;
         } else {
             return false;
         }

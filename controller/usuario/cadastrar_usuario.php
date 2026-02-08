@@ -13,7 +13,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $usuario = new Usuario($nome, $email, $senha, $telefone, $nivel_acesso, $cpf);
 
     if ($usuario->cadastrarUsuario()) {
-        echo "Usuario cadastrado com sucesso";
+        session_start();
+        $_SESSION['msg'] = "Usuário: $nome cadastrado com sucesso!";
+
+            header("Location: ../../view/usuario/cadastro_usuario.php");
     } else {
         header("Location: ../../view/usuario/index.php");
     }

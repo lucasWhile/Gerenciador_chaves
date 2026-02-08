@@ -97,6 +97,45 @@ body {
 
 <body>
 
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">ChaveCerta</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Link</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Cadastros
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="../../view/bloco/cadastrar_bloco.php">Cadastrar Bloco</a></li>
+            <li><a class="dropdown-item" href="../../view/sala/cadastrar_sala.php">Cadastrar Sala</a></li>
+            <li><a class="dropdown-item" href="../../view/usuario/cadastro_usuario.php">Cadastrar Usuário</a></li>
+          <li><a class="dropdown-item" href="../../view/usuario/listar_usuarios.php">Lista de Usuários</a></li>
+            </ul>
+        </li>
+        <?php 
+        if(isset($_SESSION['nome'])){ ?>
+        <li class="nav-item">
+          <a class="nav-link" href="../../controller/usuario/logout.php">Sair</a>
+        </li>
+        <?php  }  ?>
+
+      </ul>
+    
+    </div>
+  </div>
+</nav>
+
+
 <div class="container-xl py-4">
 
 <h3 class="fw-bold mb-4">📋 Controle de Empréstimo de Salas</h3>
@@ -108,12 +147,12 @@ body {
 
 <div class="col-md-4">
     <label class="form-label fw-semibold">Data</label>
-    <input type="date" name="data" class="form-control" value="<?= $_GET['data'] ?? '' ?>">
+    <input type="date" name="data" class="form-control" value="<?= $_GET['data'] ?? '' ?>" required>
 </div>
 
 <div class="col-md-4">
     <label class="form-label fw-semibold">Período</label>
-    <select name="periodo" class="form-select">
+    <select name="periodo" class="form-select" required>
         <option value="matutino" <?= (@$_GET['periodo']=='matutino')?'selected':'' ?>>Matutino</option>
         <option value="vespertino" <?= (@$_GET['periodo']=='vespertino')?'selected':'' ?>>Vespertino</option>
         <option value="noturno" <?= (@$_GET['periodo']=='noturno')?'selected':'' ?>>Noturno</option>
@@ -174,7 +213,7 @@ Salas – <?= $_GET['periodo'] ?> | <?= $_GET['data'] ?>
 
 <div class="mb-4">
 <label class="form-label fw-semibold">Evento/turma</label>
-<input type="text" name="evento" class="form-control">
+<input type="text" name="evento" class="form-control" required>
 </div>
 
 <div class="accordion" id="accordionBlocos">
@@ -236,13 +275,14 @@ if ($blocoAtual != "") {
 <?php endif; ?>
 
 <div class="row">
-    <h1>salas ocupadas</h1>
+    <h1>salas em uso</h1>
 
   <table class="table table-bordered table-hover mt-4">
     <thead class="table-dark">
         <tr>
             <th>Sala / Bloco</th>
             <th>Evento</th>
+            <th>Período</th>
             <th>Usuário</th>
             <th>Data</th>
             <th>Hora retirada</th>
@@ -261,6 +301,7 @@ if ($blocoAtual != "") {
                 <td>
                     <?= $e['nome_sala'] ?> / <?= $e['nome_bloco'] ?>
                 </td>
+               <td><?= $e['evento'] ?></td>
                 <td><?= $e['periodo'] ?></td>
                 <td><?= $e['nome_usuario'] ?></td>
                 <td><?= date('d/m/Y', strtotime($e['data_emprestimo'])) ?></td>
@@ -269,6 +310,7 @@ if ($blocoAtual != "") {
                  <?php if ($_SESSION['nivel_acesso'] == 'admin' || $_SESSION['nivel_acesso'] == 'gerente' || $_SESSION['nivel_acesso'] == 'coordenador' || $_SESSION['nivel_acesso'] == 'portaria'): ?>
                 <td>      
                     <form action="../../controller/emprestimo/devolucao_emprestimo.php" method="post">
+                        <input type="hidden" name="periodo" value="<?= $_GET['periodo'] ?>">
                         <input type="hidden" name="data_emprestimo" value="<?= $e['data_emprestimo'] ?>">
                         <input type="hidden" name="id_emprestimo" value="<?= $e['id_emprestimo'] ?>">
                         <button class="btn btn-sm btn-success">Registrar Devolução</button>
@@ -293,7 +335,7 @@ if ($blocoAtual != "") {
 </div>
 
 <div class="row">
-    <h1>salas devolvidas</h1>
+    <h1> histórico do turno</h1>
 
   <table class="table table-bordered table-hover mt-4">
     <thead class="table-dark">

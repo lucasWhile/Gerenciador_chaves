@@ -58,6 +58,7 @@ class emprestimo{
             e.hora_devolucao,
             e.periodo,
             e.status_emprestimo,
+            e.evento,
 
             u.id_usuario,
             u.nome_usuario,
