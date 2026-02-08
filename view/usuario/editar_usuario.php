@@ -123,7 +123,6 @@ $usuarios = $usuarioModel->BuscarUsuario($_GET['id']);
                             </a>
                         </div>
 
-                        hidden input to pass the user ID for editing
                      
 
                     </form>
