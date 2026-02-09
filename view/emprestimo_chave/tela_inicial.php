@@ -215,16 +215,14 @@ body {
 
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#">ChaveCerta</a>
+    <a class="navbar-brand" href="tela_inicial.php">ChaveCerta</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="..">Home</a>
-        </li>
-   
+
+
 
         <?php if(isset($_SESSION['nivel_acesso']) && $_SESSION['nivel_acesso']=='gerencia' || $_SESSION['nivel_acesso']=='coordenacao' || $_SESSION['nivel_acesso']=='admin'   ) { 
          ?>  
@@ -302,10 +300,27 @@ if (isset($_SESSION['auth']) && empty($_SESSION['boas_vindas_mostrada'])) {
 <div class="card-box mb-4">
 <form method="get" class="row g-3 align-items-end">
 
+<?php
+date_default_timezone_set('America/Campo_Grande');
+if($_SESSION['nivel_acesso']=='instrutor'){?>
+    <div class="col-md-4">
+        <label class="form-label fw-semibold">Data</label>
+        <input type="date" name="data" class="form-control" value="<?= date('Y-m-d') ?>" disabled >
+    </div>
+
+<?php
+}
+else{ ?>
+
 <div class="col-md-4">
     <label class="form-label fw-semibold">Data</label>
     <input type="date" name="data" class="form-control" value="<?= $_GET['data'] ?? '' ?>" required>
 </div>
+
+<?php
+}
+?>
+
 
 <div class="col-md-4">
     <label class="form-label fw-semibold">Período</label>
@@ -381,13 +396,21 @@ else{ ?>
 
 </div>
 
-<div class="mb-4">
-<div class="form-check form-switch">
-  <input class="form-check-input" type="checkbox" name="agendamento" role="switch" id="switchCheckDefault" value="agendamento">
-  <label class="form-check-label" for="switchCheckDefault">Agendar</label>
-</div> 
-</div>
 
+
+
+  <?php if ($_SESSION['nivel_acesso'] == 'admin' || $_SESSION['nivel_acesso'] == 'gerente' || $_SESSION['nivel_acesso'] == 'coordenador' ){ ?>
+
+            <div class="mb-4">
+            <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" name="agendamento" role="switch" id="switchCheckDefault" value="agendamento">
+            <label class="form-check-label" for="switchCheckDefault">Agendar</label>
+            </div> 
+            </div>
+<?php  } ?>
+
+               
+               
 
 
 

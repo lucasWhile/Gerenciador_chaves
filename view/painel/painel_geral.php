@@ -60,12 +60,22 @@ foreach ($emprestimos as $emp) {
                     </button>
                 </div>
 
+                <div class="d-flex justify-content-start gap-3 mt-3">
+                    <a href="../emprestimo_chave/tela_inicial.php" class="btn btn-outline-secondary">
+                        ⬅️ Voltar
+                    </a>
+
+         
+                </div>
+
             </form>
         </div>
     </div>
   </div>
 
-
+  <div class="container">
+    <div class="row">
+        
     <?php if(isset($_GET['data_inicial']) && isset($_GET['data_final'])): ?>
 
     <div class="card shadow-sm">
@@ -83,15 +93,17 @@ foreach ($emprestimos as $emp) {
 
 
 
-                <div class="d-flex justify-content-center gap-3 mt-3">
+             
+                <button onclick="window.print()" class="btn btn-danger">
+                    📄 Salvar / Imprimir PDF
+                </button>
+
+                   <div class="d-flex justify-content-center gap-3 mt-3">
                 <a href="../emprestimo_chave/tela_inicial.php" class="btn btn-outline-secondary">
                     ⬅️ Voltar
                 </a>
 
-                <button onclick="window.print()" class="btn btn-danger">
-                    📄 Salvar / Imprimir PDF
-                </button>
-</div>
+                </div>
 
             </div>
 
@@ -163,6 +175,9 @@ foreach ($emprestimos as $emp) {
     </div>
 
     <?php endif; ?>
+    </div>
+  </div>
+
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
