@@ -11,6 +11,8 @@ $lista_usuarios = $usuarios->listarUsuarios();
 include_once '../../model/emprestimo.php';
 $emprestimoModel = new emprestimo(null, null, null, null, null, null, null,null);
 
+
+
 $salasOcupadas = [];
 
 if (isset($_GET['data'], $_GET['periodo'])) {
@@ -31,6 +33,21 @@ $buscar = isset($_GET['buscar']) && $_GET['buscar'] === 'true';
         }
     }
 }
+
+
+date_default_timezone_set('America/Campo_Grande');
+$horaAtual = date('H:i');
+
+if ($horaAtual >= '06:00' && $horaAtual < '12:00') {
+    $periodoAtual = 'matutino';
+} elseif ($horaAtual >= '12:00' && $horaAtual < '18:00') {
+    $periodoAtual = 'vespertino';
+} elseif ($horaAtual >= '18:00' && $horaAtual <= '22:00') {
+    $periodoAtual = 'noturno';
+} else {
+    $periodoAtual = '';
+}
+
 
 
 ?>
@@ -310,10 +327,23 @@ if($_SESSION['nivel_acesso']=='instrutor'){?>
     name="data"
     class="form-control"
     value="<?= date('Y-m-d') ?>"
-    readonly
->
+    readonly>
 
     </div>
+
+<div class="col-md-4">
+    <label class="form-label fw-semibold">Período</label>
+    <select class="form-select" disabled>
+        <option value="matutino" <?= ($periodoAtual == 'matutino') ? 'selected' : '' ?>>Matutino</option>
+        <option value="vespertino" <?= ($periodoAtual == 'vespertino') ? 'selected' : '' ?>>Vespertino</option>
+        <option value="noturno" <?= ($periodoAtual == 'noturno') ? 'selected' : '' ?>>Noturno</option>
+    </select>
+
+    <!-- campo oculto para enviar o valor -->
+    <input type="hidden" name="periodo" value="<?= $periodoAtual ?>">
+</div>
+
+
 
 <?php
 }
@@ -330,20 +360,26 @@ else{ ?>
     >
 </div>
 
+<div class="col-md-4">
+    <label class="form-label fw-semibold">Período</label>
+    <select name="periodo" class="form-select" required>
+        <option value="matutino" <?= ($periodoAtual == 'matutino') ? 'selected' : '' ?>>Matutino</option>
+        <option value="vespertino" <?= ($periodoAtual == 'vespertino') ? 'selected' : '' ?>>Vespertino</option>
+        <option value="noturno" <?= ($periodoAtual == 'noturno') ? 'selected' : '' ?>>Noturno</option>
+    </select>
+</div>
+
 
 <?php
+
+
+
+
 }
 ?>
 
 
-<div class="col-md-4">
-    <label class="form-label fw-semibold">Período</label>
-    <select name="periodo" class="form-select" required>
-        <option value="matutino" <?= (@$_GET['periodo']=='matutino')?'selected':'' ?>>Matutino</option>
-        <option value="vespertino" <?= (@$_GET['periodo']=='vespertino')?'selected':'' ?>>Vespertino</option>
-        <option value="noturno" <?= (@$_GET['periodo']=='noturno')?'selected':'' ?>>Noturno</option>
-    </select>
-</div>
+
 
 <div class="col-md-4">
     <button class="btn btn-primary w-100"  id="btnBuscar">🔍 Buscar Salas</button>
@@ -417,7 +453,7 @@ else{ ?>
 
             <div class="mb-4">
             <div class="form-check form-switch">
-            <input class="form-check-input" type="checkbox" name="agendamento" role="switch" id="switchCheckDefault" value="agendamento">
+            <input class="form-check-input" type="checkbox" name="agendamento" role="switch" id="switchCheckDefault" value="agendamento" >
             <label class="form-check-label" for="switchCheckDefault">Agendar</label>
             </div> 
             </div>
@@ -594,13 +630,13 @@ if($_SESSION['nivel_acesso'] ) { ?>
         <tr>
             <th>Sala / Bloco</th>
             <th>Evento</th>
+            <th>Período</th>
             <th>Usuário</th>
             <th>Data</th>
             <th>Hora retirada</th>
             <th>Hora entrega</th>
-            <?php if ($_SESSION['nivel_acesso'] == 'admin' || $_SESSION['nivel_acesso'] == 'gerente' || $_SESSION['nivel_acesso'] == 'coordenador' || $_SESSION['nivel_acesso'] == 'portaria'): ?>
             <th>Devolução</th>
-            <?php endif; ?>
+            
         </tr>
     </thead>
     <tbody>
@@ -612,25 +648,17 @@ if($_SESSION['nivel_acesso'] ) { ?>
                 <td>
                     <?= $e['nome_sala'] ?> / <?= $e['nome_bloco'] ?>
                 </td>
+                <td><?= $e['evento'] ?></td>
                 <td><?= $e['periodo'] ?></td>
                 <td><?= $e['nome_usuario'] ?></td>
                 <td><?= date('d/m/Y', strtotime($e['data_emprestimo'])) ?></td>
                 <td><?= $e['hora_retirada'] ?></td>
                 <td><?= $e['hora_devolucao'] ?? '-' ?></td>
-                 <?php if ($_SESSION['nivel_acesso'] == 'admin' || $_SESSION['nivel_acesso'] == 'gerente' || $_SESSION['nivel_acesso'] == 'coordenador' || $_SESSION['nivel_acesso'] == 'portaria'): ?>
-                
-                
-                <td>      
-                    <form action="../../controller/emprestimo/devolucao_emprestimo.php" method="post">
-                        <input type="hidden" name="data_emprestimo" value="<?= $e['data_emprestimo'] ?>">
-                        <input type="hidden" name="id_emprestimo" value="<?= $e['id_emprestimo'] ?>">
-                        <button class="btn btn-sm btn-success" disabled>Devolvido</button>
-                    </form>
-                </td>
+                <td>
+                      <button class="btn btn-sm btn-success" disabled>Devolvido</button></td>
+                      
 
-
-
-                <?php endif; ?>
+            
             </tr>
             <?php endif; ?>
         <?php endforeach; ?>
