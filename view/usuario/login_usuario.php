@@ -14,82 +14,115 @@ session_start();
 
     <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: linear-gradient(135deg, #0d6efd, #0a58ca);
+        }
+
+        .card {
+            border-radius: 1rem;
+        }
+
+        .brand-box {
+            background: linear-gradient(160deg, #0d6efd, #084298);
+        }
+
+        .brand-box h4 {
+            letter-spacing: 0.5px;
+        }
+
+        .footer-credit {
+            font-size: 0.75rem;
+            color: #6c757d;
+        }
+    </style>
 </head>
 
-<body class="bg-light">
+<body>
 
-    <div class="container min-vh-100 d-flex align-items-center">
-        <div class="row justify-content-center w-100">
+    <div class="container min-vh-100 d-flex align-items-center justify-content-center">
+        <div class="col-md-9 col-lg-7">
 
-            <div class="col-md-8 col-lg-6">
-                <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+            <div class="card shadow-lg border-0 overflow-hidden">
+                <div class="row g-0">
 
-                    <div class="row g-0">
+                    <!-- Lado esquerdo -->
+                    <div class="col-md-5 brand-box text-white d-flex align-items-center">
+                        <div class="p-4 text-center w-100">
+                            <i class="bi bi-building fs-1 mb-3"></i>
+                            <h4 class="fw-bold">Bem-vindo!</h4>
+                            <p class="small mb-3">
+                                Sistema de Gerenciamento de Salas<br>
+                                <strong>Versão 0001 • Beta</strong>
+                            </p>
 
-                        <!-- Lado esquerdo - Boas-vindas -->
-                        <div class="col-md-5 bg-primary text-white d-flex align-items-center">
-                            <div class="p-4 text-center">
-                                <i class="bi bi-building fs-1 mb-3"></i>
-                                <h4 class="fw-bold">Bem-vindo!</h4>
-                                <p class="small mb-0">
-                                    Ao <strong>Sistema de Gerenciamento de Salas versão 0001 beta</strong>.<br>
-                                    Faça login para acessar o controle de reservas, usuários e ambientes.
-                                </p>
-                            </div>
+                            <hr class="border-light">
+
+                            <p class="small mb-0">
+                                Projeto desenvolvido para o<br>
+                                <strong>SENAI – Corumbá/MS</strong>
+                            </p>
                         </div>
+                    </div>
 
-                        <!-- Lado direito - Login -->
-                        <div class="col-md-7">
-                            <div class="card-body p-4">
-                                <?php
-                                if (isset($_SESSION['msg'])) {
-                                    echo '<div class="alert alert-danger" role="alert">' . $_SESSION['msg'] . '</div>';
-                                    unset($_SESSION['msg']);
-                                }
-                                ?>
+                    <!-- Lado direito -->
+                    <div class="col-md-7">
+                        <div class="card-body p-4 p-md-5">
 
+                            <?php
+                            if (isset($_SESSION['msg'])) {
+                                echo '<div class="alert alert-danger text-center">' . $_SESSION['msg'] . '</div>';
+                                unset($_SESSION['msg']);
+                            }
+                            ?>
 
-                                <h5 class="text-center mb-4">
-                                    <i class="bi bi-box-arrow-in-right me-1"></i>
-                                    Acesso ao Sistema
-                                </h5>
+                            <h5 class="text-center mb-4 fw-semibold">
+                                <i class="bi bi-box-arrow-in-right me-1"></i>
+                                Acesso ao Sistema
+                            </h5>
 
-                                <form action="../../controller/usuario/login_usuario.php" method="post">
+                            <form action="../../controller/usuario/login_usuario.php" method="post">
 
-                                    <!-- CPF -->
-                                    <div class="mb-3">
-                                        <label for="cpf" class="form-label">CPF</label>
-                                        <div class="input-group">
-                                            <span class="input-group-text">
-                                                <i class="bi bi-person-vcard"></i>
-                                            </span>
-                                            <input type="text" id="cpf" name="cpf" class="form-control" placeholder="000.000.000-00" required>
-                                        </div>
+                                <!-- CPF -->
+                                <div class="mb-3">
+                                    <label for="cpf" class="form-label">CPF</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">
+                                            <i class="bi bi-person-vcard"></i>
+                                        </span>
+                                        <input type="text" id="cpf" name="cpf" class="form-control"
+                                            placeholder="000.000.000-00" required>
                                     </div>
+                                </div>
 
-                                    <!-- Senha -->
-                                    <div class="mb-4">
-                                        <label for="senha" class="form-label">Senha</label>
-                                        <div class="input-group">
-                                            <span class="input-group-text">
-                                                <i class="bi bi-lock"></i>
-                                            </span>
-                                            <input type="password" id="senha" name="senha" class="form-control" required>
-                                        </div>
+                                <!-- Senha -->
+                                <div class="mb-4">
+                                    <label for="senha" class="form-label">Senha</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">
+                                            <i class="bi bi-lock"></i>
+                                        </span>
+                                        <input type="password" id="senha" name="senha" class="form-control" required>
                                     </div>
+                                </div>
 
-                                    <div class="d-grid mb-3">
-                                        <button type="submit" class="btn btn-primary">
-                                            <i class="bi bi-door-open me-1"></i>
-                                            Entrar
-                                        </button>
-                                    </div>
+                                <div class="d-grid mb-3">
+                                    <button type="submit" class="btn btn-primary btn-lg">
+                                        <i class="bi bi-door-open me-1"></i>
+                                        Entrar
+                                    </button>
+                                </div>
 
-                                </form>
+                            </form>
 
+                            <!-- Rodapé -->
+                            <div class="text-center footer-credit mt-4">
+                                Desenvolvido por <strong>Instrutor Lucas</strong><br>
+                                SENAI – Corumbá/MS
                             </div>
-                        </div>
 
+                        </div>
                     </div>
 
                 </div>
