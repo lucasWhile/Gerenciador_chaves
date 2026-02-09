@@ -32,7 +32,7 @@ session_start();
                                 <i class="bi bi-building fs-1 mb-3"></i>
                                 <h4 class="fw-bold">Bem-vindo!</h4>
                                 <p class="small mb-0">
-                                    Ao <strong>Sistema de Gerenciamento de Salas</strong>.<br>
+                                    Ao <strong>Sistema de Gerenciamento de Salas versão 0001 beta</strong>.<br>
                                     Faça login para acessar o controle de reservas, usuários e ambientes.
                                 </p>
                             </div>

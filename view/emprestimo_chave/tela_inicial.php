@@ -314,8 +314,15 @@ else{ ?>
 
 <div class="col-md-4">
     <label class="form-label fw-semibold">Data</label>
-    <input type="date" name="data" class="form-control" value="<?= $_GET['data'] ?? '' ?>" required>
+    <input 
+        type="date" 
+        name="data" 
+        class="form-control"
+        value="<?= $_GET['data'] ?? date('Y-m-d') ?>"
+        required
+    >
 </div>
+
 
 <?php
 }
