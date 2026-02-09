@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['telefone'] = $dados['telefone_usuario'];
             $_SESSION['nivel_acesso'] = $dados['nivel_acesso'];
             $_SESSION['cpf'] = $dados['cpf_usuario'];
-
+            $_SESSION['auth'] = true;  
             header("Location: ../../view/emprestimo_chave/tela_inicial.php");
         } else {
             $_SESSION['msg'] = 'CPF ou senha inválidos!';

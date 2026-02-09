@@ -346,7 +346,94 @@ class emprestimo{
     }
 
 
+
+     public function ConfirmarRetiradaChaveAgendada($id_emprestimo, $hora_inicial)
+    {
+        $conexao = new conexao();
+        $mysqli = $conexao->conectar();
+
+        $stmt = $mysqli->prepare("UPDATE emprestimo_chave SET hora_retirada = ?, status_emprestimo = 1 WHERE id_emprestimo = ?");
+        $stmt->bind_param("si", $hora_inicial, $id_emprestimo);
+
+        if ($stmt->execute()) {
+            return true;
+        } else {
+            return false;
+        }
+
+        $stmt->close();
+        $mysqli->close();
+    }
+
+
  
+
+      public function buscarSalasAgendadas($status)
+{
+    $conexao = new conexao();
+    $mysqli = $conexao->conectar();
+
+    $sql = "
+        SELECT 
+            e.id_emprestimo,
+            e.data_emprestimo,
+            e.hora_retirada,
+            e.hora_devolucao,
+            e.periodo,
+            e.status_emprestimo,
+            e.evento,
+
+            u.id_usuario,
+            u.nome_usuario,
+
+            s.id_sala,
+            s.nome_sala,
+
+            b.id_bloco,
+            b.nome_bloco
+        FROM emprestimo_chave e
+        INNER JOIN usuario u ON e.id_usuario = u.id_usuario
+        INNER JOIN sala s ON e.id_sala = s.id_sala
+        INNER JOIN bloco_predial b ON s.id_bloco = b.id_bloco
+        WHERE e.status_emprestimo = ?
+    ";
+
+    $stmt = $mysqli->prepare($sql);
+    $stmt->bind_param("s", $status);
+    $stmt->execute();
+
+    $result = $stmt->get_result();
+    $emprestimos = [];
+
+    while ($row = $result->fetch_assoc()) {
+        $emprestimos[] = $row;
+    }
+
+    $stmt->close();
+    $mysqli->close();
+
+    return $emprestimos;
+}
+
+
+
+ public function Cancelar_agendamento_sala($id_emprestimo)
+    {
+        $conexao = new conexao();
+        $mysqli = $conexao->conectar();
+
+        $stmt = $mysqli->prepare("UPDATE emprestimo_chave SET status_emprestimo = 4 WHERE id_emprestimo = ?");
+        $stmt->bind_param("i", $id_emprestimo);
+
+        if ($stmt->execute()) {
+            return true;
+        } else {
+            return false;
+        }
+
+        $stmt->close();
+        $mysqli->close();
+    }
 
 }
 

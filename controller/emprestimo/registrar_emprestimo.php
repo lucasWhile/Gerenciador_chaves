@@ -1,4 +1,5 @@
 <?php
+include_once '../../model/emprestimo.php';
 session_start();
 $data=$_POST['data'];        // ex: 2026-02-10
 $_POST['periodo'];     // matutino | vespertino | noturno
@@ -17,8 +18,21 @@ echo "Horário: $_POST[hora] <br>";
 print_r($id_salas); // array de ids das salas selecionadas
 
 
-include_once '../../model/emprestimo.php';
+if(isset($_POST['agendamento'])){
+
 foreach ($id_salas as $id_sala) {
+    $emprestimo = new emprestimo($_POST['data'], null, null, $_POST['periodo'], 3, $_POST['id_usuario'], $id_sala,$evento);
+    if ($emprestimo->cadastrarEmprestimo()) {
+      
+    $_SESSION['msg'] = 'Empréstimo registrado com sucesso!';
+     header("Location: ../../view/emprestimo_chave/tela_inicial.php?data=$data&periodo=$_POST[periodo]&buscar=true");
+    } 
+}
+
+}
+
+else{
+    foreach ($id_salas as $id_sala) {
     $emprestimo = new emprestimo($_POST['data'], $hora, null, $_POST['periodo'], 1, $_POST['id_usuario'], $id_sala,$evento);
     if ($emprestimo->cadastrarEmprestimo()) {
     $_SESSION['msg'] = 'Empréstimo registrado com sucesso!';
@@ -27,4 +41,9 @@ foreach ($id_salas as $id_sala) {
         echo "Erro ao registrar empréstimo para a sala ID: $id_sala <br>";
     }
 }
+}
+
+
+
+
 ?>

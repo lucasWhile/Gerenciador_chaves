@@ -13,15 +13,13 @@ $emprestimoModel = new emprestimo(null, null, null, null, null, null, null,null)
 
 $salasOcupadas = [];
 
-if (isset($_GET['data'], $_GET['periodo'])) {
-    $data = $_GET['data'];
-    $periodo = $_GET['periodo'];
-    $emprestimos = $emprestimoModel->buscarEmprestimos($data, $periodo);
-    $emprestimosDevolvidos= $emprestimoModel->buscarEmprestimosDevolvidos($data, $periodo);
+date_default_timezone_set('America/Campo_Grande');
+$hora = date('H:i:s');
 
+
+
+    $emprestimos = $emprestimoModel->buscarSalasAgendadas(3);
   
-$buscar = isset($_GET['buscar']) && $_GET['buscar'] === 'true';
-
 
     if (!empty($emprestimos)) {
         foreach ($emprestimos as $e) {
@@ -30,7 +28,7 @@ $buscar = isset($_GET['buscar']) && $_GET['buscar'] === 'true';
             }
         }
     }
-}
+
 
 
 ?>
@@ -215,7 +213,7 @@ body {
 
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#">ChaveCerta</a>
+    <a class="navbar-brand" href="../emprestimo_chave/tela_inicial.php">ChaveCerta</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -254,7 +252,7 @@ body {
             </li>
 
                <li class="nav-item dropdown">
-                <a class="nav-link" href="../emprestimo_chave/salas_agendadas.php">
+                <a class="nav-link" href="#">
                 Salas agendadas
                 </a>
              </li>
@@ -295,173 +293,11 @@ if (isset($_SESSION['auth']) && empty($_SESSION['boas_vindas_mostrada'])) {
 
 <div class="container-xl py-4">
 
-<h3 class="fw-bold mb-4">📋 Controle de Empréstimo de Salas</h3>
+<h3 class="fw-bold mb-4">📋 Salas agendadas</h3>
 
-
-<!-- FORM BUSCA -->
-<div class="card-box mb-4">
-<form method="get" class="row g-3 align-items-end">
-
-<div class="col-md-4">
-    <label class="form-label fw-semibold">Data</label>
-    <input type="date" name="data" class="form-control" value="<?= $_GET['data'] ?? '' ?>" required>
-</div>
-
-<div class="col-md-4">
-    <label class="form-label fw-semibold">Período</label>
-    <select name="periodo" class="form-select" required>
-        <option value="matutino" <?= (@$_GET['periodo']=='matutino')?'selected':'' ?>>Matutino</option>
-        <option value="vespertino" <?= (@$_GET['periodo']=='vespertino')?'selected':'' ?>>Vespertino</option>
-        <option value="noturno" <?= (@$_GET['periodo']=='noturno')?'selected':'' ?>>Noturno</option>
-    </select>
-</div>
-
-<div class="col-md-4">
-    <button class="btn btn-primary w-100"  id="btnBuscar">🔍 Buscar Salas</button>
-</div>
-
-</form>
-</div>
-
-<?php if (isset($_GET['data'], $_GET['periodo'])): ?>
-
-<form action="../../controller/emprestimo/registrar_emprestimo.php" method="post">
-
-<input type="hidden" name="hora" id="hora">
-<input type="hidden" name="data" value="<?= $_GET['data'] ?>">
-<input type="hidden" name="periodo" value="<?= $_GET['periodo'] ?>">
-
-<div class="card-box">
-
-<h5 class="fw-semibold mb-3">
-Salas – <?= $_GET['periodo'] ?> | <?= $_GET['data'] ?>
-</h5>
-
-   <?php if (isset($_SESSION['msg'])): ?>
-                    <div class="alert alert-success" role="alert">
-                        <?= $_SESSION['msg'] ?>
-                    </div>
-                <?php endif; ?>
-                <?php unset($_SESSION['msg']); 
-    ?>
-
-
-<!-- LEGENDA -->
-<div class="d-flex gap-4 mb-4">
-    <div class="d-flex align-items-center gap-2">
-        <span style="width:16px;height:16px;background:#0d6efd;border-radius:4px;"></span> Livre
-    </div>
-    <div class="d-flex align-items-center gap-2">
-        <span style="width:16px;height:16px;background:#198754;border-radius:4px;"></span> Selecionada
-    </div>
-    <div class="d-flex align-items-center gap-2">
-        <span style="width:16px;height:16px;background:#dc3545;border-radius:4px;"></span> Ocupada
-    </div>
-</div>
-
-<div class="mb-4">
-<label class="form-label fw-semibold">Usuário responsável</label>
-
-<?php if(isset($_SESSION['nivel_acesso']) && $_SESSION['nivel_acesso']=='instrutor' ){  ?>
-
-        <select name="id_usuario" class="form-select shadow-sm" required>
-  
-        <option value="<?= $_SESSION['id_usuario'] ?>"><?= $_SESSION['nome'] ?></option>
-      
-        </select>
-<?php } 
-else{ ?>
-
-<select name="id_usuario" class="form-select shadow-sm" required>
-<?php while($u = $lista_usuarios->fetch_assoc()): ?>   
-<option value="<?= $u['id_usuario'] ?>"><?= $u['nome_usuario'] ?></option>
-<?php endwhile; ?>
-</select>
-<?php } ?>
-
-</div>
-
-<div class="mb-4">
-<div class="form-check form-switch">
-  <input class="form-check-input" type="checkbox" name="agendamento" role="switch" id="switchCheckDefault" value="agendamento">
-  <label class="form-check-label" for="switchCheckDefault">Agendar</label>
-</div> 
-</div>
-
-
-
-
-
-<div class="mb-4">
-<label class="form-label fw-semibold">Evento/turma</label>
-<input type="text" name="evento" class="form-control" required>
-</div>
-
-<div class="accordion" id="accordionBlocos">
-<?php
-$blocoAtual = "";
-$contador = 0;
-
-while ($row = $salas->fetch_assoc()) {
-
-    if ($blocoAtual != $row['nome_bloco']) {
-
-        if ($blocoAtual != "") {
-            echo "</div></div></div></div>";
-        }
-
-        $blocoAtual = $row['nome_bloco'];
-        $contador++;
-        $show = ($contador == 1 ) ? "show" : "";
-
-        echo "
-        <div class='accordion-item mb-3'>
-            <h2 class='accordion-header'>
-                <button type='button'
-                        class='accordion-button ".($contador>1?'collapsed':'')." fw-semibold'
-                        data-bs-toggle='collapse'
-                        data-bs-target='#bloco$contador'>
-                    🏢 Bloco {$blocoAtual}
-                </button>
-            </h2>
-
-            <div id='bloco$contador' class='accordion-collapse collapse $show'>
-                <div class='accordion-body'>
-                    <div class='row row-cols-2 row-cols-md-4 g-3'>";
-    }
-
-    $ocupada = isset($salasOcupadas[$row['id_sala']]);
-    $classe = $ocupada ? 'sala-ocupada' : '';
-
-    echo "
-    <div class='col'>
-        <div class='sala $classe' data-id='{$row['id_sala']}'>
-            <span class='sala-nome'>{$row['nome_sala']}</span>
-        </div>
-    </div>";
-}
-
-if ($blocoAtual != "") {
-    echo "</div></div></div></div>";
-}
-?>
-</div>
-
-<?php 
-if($_SESSION['nivel_acesso'] ) { ?>
-    <button type="submit" class="btn btn-success btn-lg w-100 mt-4">
-    ✔ Registrar Empréstimo
-    </button>   
-<?php } ?>
-
-
-
-</div>
-</form>
-<?php endif; ?>
 
 <div class="row">
-    <h1>salas em uso</h1>
+
 
   <table class="table table-bordered table-hover mt-4">
     <thead class="table-dark">
@@ -486,7 +322,7 @@ if($_SESSION['nivel_acesso'] ) { ?>
 
     <?php if (!empty($emprestimos)): ?>
         <?php foreach ($emprestimos as $e): ?>
-            <?php if ($e['status_emprestimo'] == 1 ||$e['status_emprestimo'] == 3 ): ?>
+            <?php if ($e['status_emprestimo'] == 3 ): ?>
             <tr>
                 <td>
                     <?= $e['nome_sala'] ?> / <?= $e['nome_bloco'] ?>
@@ -506,12 +342,21 @@ if($_SESSION['nivel_acesso'] ) { ?>
 
                 <td>      
                     <form action="../../controller/emprestimo/confirmar_retirada.php" method="post">
-                         <input type="hidden" name="data_volta" value="<?= $_GET['data'] ?>">
+                     
                         <input type="hidden" name="confirmar_retirada" value="confirmar">
-                        <input type="hidden" name="periodo" value="<?= $_GET['periodo'] ?>">
+                        <input type="hidden" name="periodo" value="<?= $e['periodo'] ?>">
                         <input type="hidden" name="data_emprestimo" value="<?= $e['data_emprestimo'] ?>">
                         <input type="hidden" name="id_emprestimo" value="<?= $e['id_emprestimo'] ?>">
                         <button class="btn btn-sm btn-success">Confirmar retirada</button>
+                    </form>
+
+                      <form action="../../controller/emprestimo/cancelar_emprestimo.php" method="post">
+                     
+                        <input type="hidden" name="confirmar_retirada" value="confirmar">
+                        <input type="hidden" name="periodo" value="<?= $e['periodo'] ?>">
+                        <input type="hidden" name="data_emprestimo" value="<?= $e['data_emprestimo'] ?>">
+                        <input type="hidden" name="id_emprestimo" value="<?= $e['id_emprestimo'] ?>">
+                        <button class="btn btn-sm btn-danger">Cancelar agendamento</button>
                     </form>
                 </td>
                
@@ -549,67 +394,7 @@ if($_SESSION['nivel_acesso'] ) { ?>
 
 </div>
 
-<div class="row">
-    <h1> histórico do turno</h1>
 
-  <table class="table table-bordered table-hover mt-4">
-    <thead class="table-dark">
-        <tr>
-            <th>Sala / Bloco</th>
-            <th>Evento</th>
-            <th>Usuário</th>
-            <th>Data</th>
-            <th>Hora retirada</th>
-            <th>Hora entrega</th>
-            <?php if ($_SESSION['nivel_acesso'] == 'admin' || $_SESSION['nivel_acesso'] == 'gerente' || $_SESSION['nivel_acesso'] == 'coordenador' || $_SESSION['nivel_acesso'] == 'portaria'): ?>
-            <th>Devolução</th>
-            <?php endif; ?>
-        </tr>
-    </thead>
-    <tbody>
-
-    <?php if (!empty($emprestimosDevolvidos)): ?>
-        <?php foreach ($emprestimosDevolvidos as $e): ?>
-            <?php if ($e['status_emprestimo'] == 0): ?>
-            <tr>
-                <td>
-                    <?= $e['nome_sala'] ?> / <?= $e['nome_bloco'] ?>
-                </td>
-                <td><?= $e['periodo'] ?></td>
-                <td><?= $e['nome_usuario'] ?></td>
-                <td><?= date('d/m/Y', strtotime($e['data_emprestimo'])) ?></td>
-                <td><?= $e['hora_retirada'] ?></td>
-                <td><?= $e['hora_devolucao'] ?? '-' ?></td>
-                 <?php if ($_SESSION['nivel_acesso'] == 'admin' || $_SESSION['nivel_acesso'] == 'gerente' || $_SESSION['nivel_acesso'] == 'coordenador' || $_SESSION['nivel_acesso'] == 'portaria'): ?>
-                
-                
-                <td>      
-                    <form action="../../controller/emprestimo/devolucao_emprestimo.php" method="post">
-                        <input type="hidden" name="data_emprestimo" value="<?= $e['data_emprestimo'] ?>">
-                        <input type="hidden" name="id_emprestimo" value="<?= $e['id_emprestimo'] ?>">
-                        <button class="btn btn-sm btn-success" disabled>Devolvido</button>
-                    </form>
-                </td>
-
-
-
-                <?php endif; ?>
-            </tr>
-            <?php endif; ?>
-        <?php endforeach; ?>
-    <?php else: ?>
-        <tr>
-            <td colspan="6" class="text-center text-muted">
-                Nenhuma sala ocupada neste período
-            </td>
-        </tr>
-    <?php endif; ?>
-
-    </tbody>
-</table>
-
-
-</div>
 
 </div>
 

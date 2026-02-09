@@ -41,7 +41,7 @@ CREATE TABLE sala (
 CREATE TABLE emprestimo_chave (
     id_emprestimo INT PRIMARY KEY AUTO_INCREMENT,
     data_emprestimo DATE NOT NULL,
-    hora_retirada TIME NOT NULL,
+    hora_retirada TIME ,
     hora_devolucao TIME,
     periodo VARCHAR(50) NOT NULL,
     status_emprestimo VARCHAR(50) NOT NULL,
