@@ -305,7 +305,14 @@ date_default_timezone_set('America/Campo_Grande');
 if($_SESSION['nivel_acesso']=='instrutor'){?>
     <div class="col-md-4">
         <label class="form-label fw-semibold">Data</label>
-        <input type="date" name="data" class="form-control" value="<?= date('Y-m-d') ?>" disabled >
+       <input 
+    type="date" 
+    name="data"
+    class="form-control"
+    value="<?= date('Y-m-d') ?>"
+    readonly
+>
+
     </div>
 
 <?php
